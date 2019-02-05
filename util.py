@@ -1,3 +1,5 @@
+import cv2
+
 import audiovisual_stream
 import chainer.serializers
 import librosa
@@ -18,11 +20,13 @@ def load_model():
 
 
 def load_video(data):
-    videoCapture = skvideo.io.vreader(data,num_frames=27)
+    # videoCapture = skvideo.io.vreader(data, num_frames=27)
+    videoCapture = skvideo.io.vreader(data)
 
     x = []
 
     for image in videoCapture:
+        # image = cv2.resize(image, (456, 256))
         x.append(numpy.rollaxis(image, 2))
 
     return numpy.array(x, 'float32')
