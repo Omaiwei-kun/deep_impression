@@ -5,6 +5,9 @@ import chainer.serializers
 import librosa
 import numpy
 import skvideo.io
+import numpy as np
+
+FRAMES_LIMIT = 25
 
 
 def load_audio(data):
@@ -19,20 +22,26 @@ def load_model():
     return model
 
 
-def load_video(data):
+def predict_trait(data, model):
     # videoCapture = skvideo.io.vreader(data, num_frames=27)
     videoCapture = skvideo.io.vreader(data)
 
-    x = []
+    audio_features = load_audio(data)
 
+    x = []
+    pred = []
+
+    frames_count = 0
     for image in videoCapture:
-        # image = cv2.resize(image, (456, 256))
+
         x.append(numpy.rollaxis(image, 2))
 
-    return numpy.array(x, 'float32')
+        frames_count += 1
 
+        if frames_count == FRAMES_LIMIT:
+            x = [audio_features, numpy.array(x, 'float32')]
+            pred.append(model(x))
+            frames_count = 0
+            x = []
 
-def predict_trait(data, model):
-    x = [load_audio(data), load_video(data)]
-
-    return model(x)
+    return np.mean(np.asarray(pred), axis=0)
