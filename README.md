@@ -1,4 +1,4 @@
-# deep_impression
+# deep_impression (Run on Google Colab)
 Deep Impression: Audiovisual Deep Residual Networks for Multimodal Apparent Personality Trait Recognition
 
 This repository contains the implementation of the model that won the third place in the [ChaLearn First Impressions Challenge @ ECCV2016][1].
